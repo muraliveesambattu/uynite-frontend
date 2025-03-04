@@ -12,6 +12,7 @@ import OnGoingEvents from "./Components/SponsoredEvent/OnGoingEvents";
 import CompletedEvents from "./Components/SponsoredEvent/CompletedEvents";
 import EventDetails from "./Components/SponsoredEvent/EventDetails";
 import EventsList from "./Components/SponsoredEvent/EventsList";
+import EditEvent from "./Components/SponsoredEvent/EditEvent";
 
 function App() {
   return (
@@ -28,6 +29,7 @@ function App() {
           <Route path="completed-events" element={<CompletedEvents />} />
           <Route path="event-details" element={<EventDetails />} />
           <Route path="events-list" element={<EventsList />} />
+          <Route path="edit-event" element={<EditEvent />} />
         </Route>
         <Route path="/reports" element={<Reports />} />
         <Route path="/support" element={<Support />} />

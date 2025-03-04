@@ -99,9 +99,7 @@ const SponsoredEvent: React.FC = () => {
 
         {/* Event List */}
         <div className="col-span-2 bg-white rounded shadow p-6">
-          <div className="flex justify-between items-center mb-4">
-            <h2 className="text-lg font-semibold">{activeMenu}</h2>
-          </div>
+         
           <Outlet />
 {/* 
           {visibleEvents.length > 0 ? (
