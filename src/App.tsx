@@ -10,6 +10,8 @@ import CreateEvent from "./Components/SponsoredEvent/CreateEvent";
 import UpcomingEvents from "./Components/SponsoredEvent/UpcomingEvents";
 import OnGoingEvents from "./Components/SponsoredEvent/OnGoingEvents";
 import CompletedEvents from "./Components/SponsoredEvent/CompletedEvents";
+import EventDetails from "./Components/SponsoredEvent/EventDetails";
+import EventsList from "./Components/SponsoredEvent/EventsList";
 
 function App() {
   return (
@@ -24,7 +26,9 @@ function App() {
           <Route path="upcoming-events" element={<UpcomingEvents />} />
           <Route path="ongoing-events" element={<OnGoingEvents />} />
           <Route path="completed-events" element={<CompletedEvents />} />
-        </Route>        
+          <Route path="event-details" element={<EventDetails />} />
+          <Route path="events-list" element={<EventsList />} />
+        </Route>
         <Route path="/reports" element={<Reports />} />
         <Route path="/support" element={<Support />} />
         <Route path="/blocked-users" element={<BlockedUsers />} />

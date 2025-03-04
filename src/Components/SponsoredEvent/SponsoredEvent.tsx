@@ -1,24 +1,19 @@
 import React, { useState, useEffect } from "react";
+import { Outlet, useNavigate } from "react-router-dom";
 import BreadcrumbsWithFilter from "../Breadcrumbs";
 import SidebarMenu from "../SidebarMenu";
 import EventCard from "../EventCard";
-import CreateEvent from "./CreateEvent";
-import { useNavigate } from "react-router-dom";
 
 const SponsoredEvent: React.FC = () => {
   const breadcrumbLinks = [
     { label: "Dashboard", path: "/" },
     { label: "Sponsored Event", path: "/sponsored-event" },
   ];
-  const navigate = useNavigate()
-  // State to manage active menu, selected event, and visibility of events
+  const navigate = useNavigate();
+
   const [activeMenu, setActiveMenu] = useState("Create Event and list");
-  const [selectedEvent, setSelectedEvent] = useState<string | null>(null);
-  const [isModalOpen, setIsModalOpen] = useState(false);
   const [visibleEvents, setVisibleEvents] = useState<any[]>([]); // Store visible events
-  const [showCreateEvent, setShowCreateEvent] = useState(false);
   const [createdEvents, setCreatedEvents] = useState<any[]>([
-    // Manually added events
     {
       eventName: "Music Festival 2024",
       country: "USA",
@@ -62,42 +57,35 @@ const SponsoredEvent: React.FC = () => {
     if (activeMenu === "Create Event and list") {
       setVisibleEvents(createdEvents); // Show all created events
     } else {
-      const filtered = createdEvents.filter(event => event.category === activeMenu);
-      setVisibleEvents(filtered);
+      const normalizedActiveMenu = activeMenu.toLowerCase().replace(/ /g, ""); // Normalize activeMenu
+      const filtered = createdEvents.filter(event =>
+        event.category.toLowerCase().replace(/ /g, "") === normalizedActiveMenu
+      );
+      setVisibleEvents(filtered); // Show events based on normalized category
     }
   }, [activeMenu, createdEvents]);
 
   // Handle menu selection (filtering events by category)
   const handleMenuClick = (menuLabel: string) => {
-    navigate(menuLabel);
-    setActiveMenu(menuLabel);
-    setSelectedEvent(null); // Clear selected event when switching menus
+    // Adjust the path to be based on the active menu
+    const path = menuLabel === "" ? "/sponsored-event" : `/sponsored-event/${menuLabel}`;
+    navigate(path);
+    setActiveMenu(menuLabel); // Update the active menu state
   };
 
-  // Toggle visibility of the event creation form
-  const handleCreateEvent = () => {
-    setShowCreateEvent(!showCreateEvent);
-  };
-
-  // Handle event creation and add it to the list of created events
-  const handleEventCreated = (eventData: any) => {
-    const eventWithCategory = { ...eventData, category: eventData.scheduleType || "Up Comming Events" }; // Default to "Up Comming Events" if no category
-    setCreatedEvents(prev => [...prev, eventWithCategory]); // Add new event to the list
-    setShowCreateEvent(false);  // Hide the create event form after creation
+  // Navigate to event details
+  const handleEventDetails = (event: any) => {
+    navigate("event-details", { state: { event } }); // Pass event data via state
   };
 
   // Menu items for filtering events by category
-  const menuItems: any = [
-    { label: "Create Event and list", onClick: () => handleMenuClick("create-event"), active: activeMenu === "create-event" },
-    { label: "Up Comming Events", onClick: () => handleMenuClick("upcoming-events"), active: activeMenu === "upcoming-events" },
-    { label: "On Going Event", onClick: () => handleMenuClick("ongoing-events"), active: activeMenu === "ongoing-events" },
-    { label: "Completed Events", onClick: () => handleMenuClick("completed-events"), active: activeMenu === "completed-events" },
+  const menuItems = [
+    { label: "Create Event and list", onClick: () => handleMenuClick("events-list") },
+    { label: "Up Comming Events", onClick: () => handleMenuClick("upcoming-events") },
+    { label: "On Going Event", onClick: () => handleMenuClick("ongoing-events") },
+    { label: "Completed Events", onClick: () => handleMenuClick("completed-events") },
   ];
 
-  const handleSelectEvent = (event: any) => {
-    console.log(event)
-    setSelectedEvent(event.eventName)
-  }
   return (
     <div className="min-h-screen bg-gray-100 p-6">
       {/* Breadcrumb Navigation */}
@@ -109,47 +97,30 @@ const SponsoredEvent: React.FC = () => {
           <SidebarMenu menuItems={menuItems} />
         </div>
 
-        {/* Event List or Event Detail View */}
+        {/* Event List */}
         <div className="col-span-2 bg-white rounded shadow p-6">
-          {showCreateEvent ? (
-            <CreateEvent handleCreateEventComp={handleCreateEvent} handleEventCreated={handleEventCreated} />
-          ) : selectedEvent ? (
-            <div>
-              {/* Display the selected event details */}
-              <h2 className="text-xl font-semibold">Event Details</h2>
-              <p>{selectedEvent}</p>
-            </div>
+          <div className="flex justify-between items-center mb-4">
+            <h2 className="text-lg font-semibold">{activeMenu}</h2>
+          </div>
+          <Outlet />
+{/* 
+          {visibleEvents.length > 0 ? (
+            visibleEvents.map((event, index) => (
+              <EventCard
+                key={index}
+                title={event.eventName}
+                location={event.country}
+                handleEventClick={() => handleEventDetails(event)} 
+              />
+            ))
           ) : (
-            <div>
-              <div className="flex justify-between items-center mb-4">
-                <h2 className="text-lg font-semibold">{activeMenu}</h2>
-                {activeMenu === "Create Event and list" && (
-                  <button
-                    className="bg-blue-500 text-white px-4 py-2 rounded shadow hover:bg-blue-600 transition"
-                    onClick={handleCreateEvent}
-                    title="Click to create a new event"
-                  >
-                    Create Event
-                  </button>
-                )}
-              </div>
-
-              {visibleEvents.length > 0 ? (
-                visibleEvents.map((event, index) => (
-                  <EventCard
-                    key={index}
-                    title={event.eventName}
-                    location={event.country}
-                    onClick={() => handleSelectEvent(event)} // Show selected event details
-                  />
-                ))
-              ) : (
-                <p className="text-gray-600 text-center">No events available.</p>
-              )}
-            </div>
-          )}
+            <p className="text-gray-600 text-center">No events available.</p>
+          )} */}
         </div>
       </div>
+
+      {/* Outlet for nested routes */}
+      
     </div>
   );
 };

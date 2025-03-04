@@ -3,14 +3,13 @@ import React from "react";
 interface EventCardProps {
   title: string;
   location: string;
-  onClick: () => void;
+  handleEventClick: () => void;
 }
 
-const EventCard: React.FC<EventCardProps> = ({ title, location, onClick }) => {
+const EventCard: React.FC<EventCardProps> = ({ title, location, handleEventClick }) => {
   return (
     <div
     className="grid grid-cols-2 bg-gray-300 rounded shadow mb-4 cursor-pointer transition min-h-[45px]"
-    onClick={onClick}
     title="Click to view details"
   >
     {/* Left Column */}
@@ -21,7 +20,7 @@ const EventCard: React.FC<EventCardProps> = ({ title, location, onClick }) => {
   
     {/* Right Column */}
     <div className="flex justify-end items-center">
-      <div className="bg-gray-400 text-white rounded shadow flex items-center justify-center h-full w-20">
+      <div className="bg-gray-400 text-white rounded shadow flex items-center justify-center h-full w-20" onClick={handleEventClick}>
         View
       </div>
     </div>
