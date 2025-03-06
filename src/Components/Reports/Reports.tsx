@@ -72,6 +72,8 @@ const Reports: React.FC = () => {
     { key: "status", label: "Status" },
     { key: "createdDate", label: "Created Date" },
     { key: "actions", label: "Actions" },
+    { key: "reason", label: "Reason for Action By Admin " },
+
   ];
 
   const tableData = reports.map((report: any) => ({
